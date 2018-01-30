@@ -1,5 +1,6 @@
 from LogWatcher import LogWatcher
 import argparse
+import re
 
 parser = argparse.ArgumentParser("Usage")
 parser.add_argument("-foldername", help="Put the fully qualified path to the foldr containing .log files",type=str,required=True)
@@ -10,9 +11,11 @@ parser.add_argument("-ActionLogFile", help="Put the fully qualified path to the 
 parser.add_argument("-ActionDBConnectionString", help="DB to store matched lines to: 'server=127.0.0.1;uid=root;pwd=12345;database=test'  *Table will be named matched",type=str)
 args = parser.parse_args()
 foldername = args.foldername
+regex = args.regex
 
 def callback(filename, lines):
     for line in lines:
-        print(line)
+        if(re.match(regex,line)):
+            print(line)
 lw = LogWatcher(foldername,callback)
 lw.loop()
